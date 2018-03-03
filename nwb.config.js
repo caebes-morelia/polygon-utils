@@ -3,7 +3,7 @@ module.exports = {
   npm: {
     umd: {
       global: 'putil',
-      externals: {}
-    }
-  }
-}
+      externals: {},
+    },
+  },
+};

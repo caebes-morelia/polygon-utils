@@ -1,146 +1,149 @@
-//var puntos_pologono = [][];
-var puntos_poligono = [[1, 3], [3, 3], [4, 4], [6, 4], [7, 3], [8, 5], [5, 7], [4, 5], [2, 6]]; //sol los puntos que forman el poligono
-var ordenar_ejex = puntos_poligono.slice();
-ordenar_ejex.sort(); //son los puntos del poligono pero ordenados de menor a mayor en el eje de las X
+// var points_pologono = [][];
+const polygonPoints = [[1, 3], [3, 3], [4, 4], [6, 4], [7, 3], [8, 5], [5, 7], [4, 5], [2, 6]]; // points that make up the polygon
+const orderXaxis = polygonPoints.slice();
+orderXaxis.sort(); // are the points of the polygon but ordered from lowest to highest on the X axis
 
-var liminx = ordenar_ejex[0][0],
-  limaxx = ordenar_ejex[ordenar_ejex.length - 1][0],
-  liminy = 1000,
-  limaxy = -1000;
+const liminx = orderXaxis[0][0];
+const limaxx = orderXaxis[orderXaxis.length - 1][0];
+let liminy = 1000;
+let limaxy = -1000;
 
-for (var c = 0; c < puntos_poligono.length; c++) {
-  if (puntos_poligono[c][1] < liminy) {
-    liminy = puntos_poligono[c][1];
-  } else if (puntos_poligono[c][1] > limaxy) {
-    //encuentra el limite minimo en Y
-    limaxy = puntos_poligono[c][1];
-  } //encuentra el limite maximo en Y
+for (let c = 0; c < polygonPoints.length; c += 1) {
+  if (polygonPoints[c][1] < liminy) {
+    liminy = polygonPoints[c][1];
+  } else if (polygonPoints[c][1] > limaxy) {
+    // find the minimum limit in Y
+    limaxy = polygonPoints[c][1];
+  } // find the maximum limit in Y
 }
 
-for (var c = 1; c < ordenar_ejex.length; c++) {
-  if (ordenar_ejex[c][0] == ordenar_ejex[c - 1][0]) {
-    ordenar_ejex.splice(c, 1);
-  } //busca numeros repetidos en eje X
+for (let c = 1; c < orderXaxis.length; c += 1) {
+  if (orderXaxis[c][0] === orderXaxis[c - 1][0]) {
+    orderXaxis.splice(c, 1);
+  } // look for repeated numbers on X axis
 }
 
 const readline = require('readline');
+
 const rl = readline.createInterface({
   input: process.stdin,
-  output: process.stdout
+  output: process.stdout,
 });
 
-var x;
-var y;
-var puntosig;
-var fronteras = 0;
-var lx;
-var ly;
-var ang;
-var ang_punto;
-rl.question('ingresa la cordenada X del punto: ', function(respuesta) {
-  x = respuesta;
-  rl.question('ingresa la cordenada en Y del punto: ', function(respuesta2) {
-    y = respuesta2;
+let x;
+let y;
+let nextpoint;
+let borders = 0;
+let lx;
+let ly;
+let angle;
+let anglePoint;
+rl.question('enter the X coordinate of the point: ', (answer) => {
+  x = answer;
+  rl.question('enter the Y coordinate of the point: ', (answer2) => {
+    y = answer2;
 
     if (x > liminx && x < limaxx && y > liminy && y < limaxy) {
-      //si el punto esta dentro de los limites del poligono
-      var i;
-      for (i = 0; i < ordenar_ejex.length; i++) {
-        if (x <= ordenar_ejex[i][0]) {
+      // If the point is within the limits of the polygon
+      let i;
+      for (i = 0; i < orderXaxis.length; i += 1) {
+        if (x <= orderXaxis[i][0]) {
           break;
         }
-      } //define a partir de donde va a pintar la linea en el eje X
+      } // define where you will paint the line on the X axis
 
-      for (var ejex; i < ordenar_ejex.length; i++) {
-        //el punto se va recorriendo en el eje X para ver cuantas fronteras cruza
-        ejex = ordenar_ejex[i][0]; //console.log('ejex: '+ejex);
-        for (var punto = 0; punto < puntos_poligono.length; punto++) {
-          //busca en el arreglo de puntos del poligono un punto que este a la misma distancia de X que el recorrido del punto
-          if (puntos_poligono[punto][0] == ejex) {
-            //si se encuentra punto del poligono q este en la misma altura en eje X que el punto
-            //console.log('vertice:'+puntos_poligono[punto]);
-            if (punto + 1 == puntos_poligono.length) {
-              puntosig = 0;
+      for (let axisx; i < orderXaxis.length; i += 1) {
+        // the point is traveled along the X axis to see how many borders it crosses
+        axisx = orderXaxis[i][0]; // console.log('axisx: '+axisx);
+        for (let point = 0; point < polygonPoints.length; point += 1) {
+          // look in the polygon points array a point that is the same distance from X as the point travel
+          if (polygonPoints[point][0] === axisx) {
+            // if find a point of the polygon that is at the same height on the X axis as the point
+            // console.log('vertice:'+polygonPoints[point]);
+            if (point + 1 === polygonPoints.length) {
+              nextpoint = 0;
             } else {
-              puntosig = punto + 1;
-            } //conecta el ultimpo punto con el primero del poligono
-            /*fron arriba*/ if (puntos_poligono[punto][1] >= y) {
-              //si el punto encontrado del poligono esta mas arriba en eje Y
-              if (puntos_poligono[punto - 1][1] <= y && puntos_poligono[punto - 1][0] <= ejex) {
-                //console.log('vertice ant:'+puntos_poligono[punto-1]);
-                if (fronteras == 0 && x <= puntos_poligono[punto][0] && x > puntos_poligono[punto - 1][0]) {
-                  lx = Math.abs(puntos_poligono[punto][0] - puntos_poligono[punto - 1][0]);
-                  ly = Math.abs(puntos_poligono[punto][1] - puntos_poligono[punto - 1][1]);
-                  ang = Math.atan(ly / lx) * 180 / Math.PI;
-                  console.log('angulo1: ' + ang);
-                  lx = Math.abs(puntos_poligono[punto][0] - x);
-                  ly = Math.abs(puntos_poligono[punto][1] - y);
-                  ang_punto = Math.atan(ly / lx) * 180 / Math.PI;
-                  console.log('angulo punto1: ' + ang_punto);
-                  if (ang_punto > ang) {
-                    fronteras--;
+              nextpoint = point + 1;
+            } // connects the last point with the first one of the polygon
+            // BORDER UP
+            if (polygonPoints[point][1] >= y) {
+              // if the polygon's found point is higher on the Y axis
+              if (polygonPoints[point - 1][1] <= y && polygonPoints[point - 1][0] <= axisx) {
+                // console.log('vertice ant:'+polygonPoints[point-1]);
+                if (borders === 0 && x <= polygonPoints[point][0] && x > polygonPoints[point - 1][0]) {
+                  lx = Math.abs(polygonPoints[point][0] - polygonPoints[point - 1][0]);
+                  ly = Math.abs(polygonPoints[point][1] - polygonPoints[point - 1][1]);
+                  angle = Math.atan(ly / lx) * (180 / Math.PI);
+                  console.log(`angle1: ${angle}`);
+                  lx = Math.abs(polygonPoints[point][0] - x);
+                  ly = Math.abs(polygonPoints[point][1] - y);
+                  anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
+                  console.log(`angle point1: ${anglePoint}`);
+                  if (anglePoint > angle) {
+                    borders -= 1;
                   }
                 }
-                fronteras++;
+                borders += 1;
                 console.log('1');
-              } else if (puntos_poligono[puntosig][1] <= y && puntos_poligono[puntosig][0] <= ejex) {
-                //si el punto anterior o el siguiente del punto encontrado estan debajo del punto en eje Y & detras en eje X del punto actual y delante de X
-                if (fronteras == 0 && x <= puntos_poligono[punto][0] && x > puntos_poligono[puntosig][0]) {
-                  lx = Math.abs(puntos_poligono[punto][0] - puntos_poligono[puntosig][0]);
-                  ly = Math.abs(puntos_poligono[punto][1] - puntos_poligono[puntosig][1]);
-                  //var h = Math.sqrt(Math.pow(lx, 2) + Math.pow(ly, 2));
-                  //var ang = Math.asin((ly*Math.sin(Math.PI/2))/h);
-                  ang = Math.atan(ly / lx) * 180 / Math.PI;
-                  console.log('angulo2: ' + ang);
-                  lx = Math.abs(puntos_poligono[punto][0] - x);
-                  ly = Math.abs(puntos_poligono[punto][1] - y);
-                  //h = Math.sqrt(Math.pow(lx, 2) + Math.pow(ly, 2));
-                  //var ang_punto = Math.asin((ly*Math.sin(Math.PI/2))/h);
-                  ang_punto = Math.atan(ly / lx) * 180 / Math.PI;
-                  console.log('angulo punto2: ' + ang_punto);
-                  if (ang_punto > ang) {
-                    fronteras--;
+              } else if (polygonPoints[nextpoint][1] <= y && polygonPoints[nextpoint][0] <= axisx) {
+                // if the previous or next point of the point found is below the point on the Y axis and behind the X axis of the current point and in front of X
+                if (borders === 0 && x <= polygonPoints[point][0] && x > polygonPoints[nextpoint][0]) {
+                  lx = Math.abs(polygonPoints[point][0] - polygonPoints[nextpoint][0]);
+                  ly = Math.abs(polygonPoints[point][1] - polygonPoints[nextpoint][1]);
+                  // var h = Math.sqrt(Math.pow(lx, 2) + Math.pow(ly, 2));
+                  // var angle = Math.asin((ly*Math.sin(Math.PI/2))/h);
+                  angle = Math.atan(ly / lx) * (180 / Math.PI);
+                  console.log(`angleulo2: ${angle}`);
+                  lx = Math.abs(polygonPoints[point][0] - x);
+                  ly = Math.abs(polygonPoints[point][1] - y);
+                  // h = Math.sqrt(Math.pow(lx, 2) + Math.pow(ly, 2));
+                  // var anglePoint = Math.asin((ly*Math.sin(Math.PI/2))/h);
+                  anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
+                  console.log(`angleulo point2: ${anglePoint}`);
+                  if (anglePoint > angle) {
+                    borders -= 1;
                   }
                 }
-                fronteras++;
-                console.log('punto: ' + punto);
-                console.log('verticeX: ' + puntos_poligono[punto - 1][0]);
+                borders += 1;
+                console.log(`point: ${point}`);
+                console.log(`verticeX: ${polygonPoints[point - 1][0]}`);
               }
-            } else if (puntos_poligono[punto][1] < y) {
-              /*fron abajo*/ //si el punto encontrado del poligono esta mas abajo en eje Y
-              if (puntos_poligono[punto - 1][1] >= y && puntos_poligono[punto - 1][0] <= ejex) {
-                //si el punto anterior o el siguiente del punto encontrado estan arriba del punto en eje Y & detras en eje X
-                if (fronteras == 0 && x <= puntos_poligono[punto][0] && x > puntos_poligono[punto - 1][0]) {
-                  lx = Math.abs(puntos_poligono[punto][0] - puntos_poligono[punto - 1][0]);
-                  ly = Math.abs(puntos_poligono[punto][1] - puntos_poligono[punto - 1][1]);
-                  ang = Math.atan(ly / lx) * 180 / Math.PI;
-                  console.log('angulo1: ' + ang);
-                  lx = Math.abs(puntos_poligono[punto][0] - x);
-                  ly = Math.abs(puntos_poligono[punto][1] - y);
-                  ang_punto = Math.atan(ly / lx) * 180 / Math.PI;
-                  console.log('angulo punto1: ' + ang_punto);
-                  if (ang_punto > ang) {
-                    fronteras--;
+            } else if (polygonPoints[point][1] < y) {
+              // BORDER DOWN
+              // if the found point of the polygon is lower on the Y axis
+              if (polygonPoints[point - 1][1] >= y && polygonPoints[point - 1][0] <= axisx) {
+                // if the previous or next point of the point found are above the point on the Y axis & back on the X axis
+                if (borders === 0 && x <= polygonPoints[point][0] && x > polygonPoints[point - 1][0]) {
+                  lx = Math.abs(polygonPoints[point][0] - polygonPoints[point - 1][0]);
+                  ly = Math.abs(polygonPoints[point][1] - polygonPoints[point - 1][1]);
+                  angle = Math.atan(ly / lx) * (180 / Math.PI);
+                  console.log(`angleulo1: ${angle}`);
+                  lx = Math.abs(polygonPoints[point][0] - x);
+                  ly = Math.abs(polygonPoints[point][1] - y);
+                  anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
+                  console.log(`angleulo point1: ${anglePoint}`);
+                  if (anglePoint > angle) {
+                    borders -= 1;
                   }
                 }
-                fronteras++;
+                borders += 1;
                 console.log('2');
-              } else if (puntos_poligono[puntosig][1] >= y && puntos_poligono[puntosig][0] <= ejex) {
-                if (fronteras == 0 && x <= puntos_poligono[punto][0] && x > puntos_poligono[puntosig][0]) {
-                  lx = Math.abs(puntos_poligono[punto][0] - puntos_poligono[puntosig][0]);
-                  ly = Math.abs(puntos_poligono[punto][1] - puntos_poligono[puntosig][1]);
-                  ang = Math.atan(ly / lx) * 180 / Math.PI;
-                  console.log('angulo1: ' + ang);
-                  lx = Math.abs(puntos_poligono[punto][0] - x);
-                  ly = Math.abs(puntos_poligono[punto][1] - y);
-                  ang_punto = Math.atan(ly / lx) * 180 / Math.PI;
-                  console.log('angulo punto1: ' + ang_punto);
-                  if (ang_punto > ang) {
-                    fronteras--;
+              } else if (polygonPoints[nextpoint][1] >= y && polygonPoints[nextpoint][0] <= axisx) {
+                if (borders === 0 && x <= polygonPoints[point][0] && x > polygonPoints[nextpoint][0]) {
+                  lx = Math.abs(polygonPoints[point][0] - polygonPoints[nextpoint][0]);
+                  ly = Math.abs(polygonPoints[point][1] - polygonPoints[nextpoint][1]);
+                  angle = Math.atan(ly / lx) * (180 / Math.PI);
+                  console.log(`angleulo1: ${angle}`);
+                  lx = Math.abs(polygonPoints[point][0] - x);
+                  ly = Math.abs(polygonPoints[point][1] - y);
+                  anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
+                  console.log(`angleulo point1: ${anglePoint}`);
+                  if (anglePoint > angle) {
+                    borders -= 1;
                   }
                 }
-                fronteras++;
-                console.log('punto2: ' + punto);
+                borders += 1;
+                console.log(`point2: ${point}`);
               }
             }
           }
@@ -148,11 +151,11 @@ rl.question('ingresa la cordenada X del punto: ', function(respuesta) {
       }
     }
 
-    console.log('fronteras cruzadas: ' + fronteras);
-    if (fronteras % 2 == 0) {
-      console.log('El punto esta fuera del poligono');
+    console.log(`cross borders: ${borders}`);
+    if (borders % 2 === 0) {
+      console.log('The point is outside the polygon');
     } else {
-      console.log('El punto esta dentro del poligono');
+      console.log('The point is inside the polygon');
     }
     rl.close();
   });

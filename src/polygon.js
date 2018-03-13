@@ -5,15 +5,15 @@ orderXaxis.sort(); // are the points of the polygon but ordered from lowest to h
 
 const liminx = orderXaxis[0][0];
 const limaxx = orderXaxis[orderXaxis.length - 1][0];
-let [liminy] = 1000;
+let liminy = 1000;
 let limaxy = -1000;
 
 for (let c = 0; c < polygonPoints.length; c += 1) {
   if (polygonPoints[c][1] < liminy) {
-    liminy = polygonPoints[c][1];
+    [, liminy] = polygonPoints[c];
   } else if (polygonPoints[c][1] > limaxy) {
     // find the minimum limit in Y
-    limaxy = polygonPoints[c][1];
+    [, limaxy] = polygonPoints[c];
   } // find the maximum limit in Y
 }
 
@@ -54,7 +54,7 @@ rl.question('enter the X coordinate of the point: ', (answer) => {
 
       for (let axisx; i < orderXaxis.length; i += 1) {
         // the point is traveled along the X axis to see how many borders it crosses
-        axisx = orderXaxis[i][0];
+        [axisx] = orderXaxis[i];
         for (let point = 0; point < polygonPoints.length; point += 1) {
           // look in the polygon points array a point that is the same distance from X as the point travel
           if (polygonPoints[point][0] === axisx) {

@@ -1,7 +1,6 @@
 const circle = [19.729378, -101.175365];
 const r = 3;
-const lat1 = circle[0];
-const lon1 = circle[1];
+const [lat1, lon1] = circle;
 let lat2;
 let lon2;
 const radius = 6371; // radius of the earth in km

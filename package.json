@@ -26,7 +26,16 @@
     "webpack": "^4.0.1"
   },
   "author": "",
-  "homepage": "",
+  "homepage": "https://github.com/caebes-morelia/polygon-utils#readme",
   "license": "MIT",
-  "repository": ""
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caebes-morelia/polygon-utils.git"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "bugs": {
+    "url": "https://github.com/caebes-morelia/polygon-utils/issues"
+  }
 }

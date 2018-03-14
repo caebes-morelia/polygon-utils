@@ -1,48 +1,37 @@
-const circle = [19.729378, -101.175365];
+
 const r = 3;
-const lat1 = circle[0];
-const lon1 = circle[1];
-let lat2;
-let lon2;
 const radius = 6371; // radius of the earth in km
 // equatorial radius=6378km  polar radius=6357km  equivolume radius=6371km
 
-const readline = require('readline');
+// isInsidePolyCircle(<Circle>, <Point>)
+const objCircle = { lat: 19.729378, lon: -101.175365, radius: 3 };
+const objPoint = { lat: 19.7293, lon: -101.1754 };
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-rl.question('enter the latitude of the point: ', (answer1) => {
-  if (Number.isNaN(answer1) || answer1 < -90 || answer1 > 90) console.log('it is not a valid coordinate');
-  else {
-    lat2 = answer1;
-    console.log(`lat=${lat2}`);
+const isInsidePolyCircle = (objC, objP) => {
+  if (objC.lat < -90 || objC.lat > 90 || objC.lon < -180 || objC.lon > 180) {
+    const err = { message: 'the center of the circle is not a valid coordinate' };
+    throw err;
   }
-  rl.question('enter the longitude of the point: ', (answer2) => {
-    if (Number.isNaN(answer2) || answer2 < -180 || answer2 > 180) console.log('it is not a valid coordinate');
-    else {
-      lon2 = answer2;
-      console.log(`lon=${lon2}`);
-    }
+  if (objP.lat < -90 || objP.lat > 90 || objP.lon < -180 || objP.lon > 180) {
+    const err = { message: 'the point is not a valid coordinate' };
+    throw err;
+  }
 
-    // //////////Haversine formula
-    const dLat = (lat2 - lat1) * (Math.PI / 180);
-    const dLon = (lon2 - lon1) * (Math.PI / 180);
-    const a =
-      (Math.sin(dLat / 2) * Math.sin(dLat / 2)) +
-      (Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2));
-    const c = 2 * Math.asin(Math.sqrt(a));
-    const distance = radius * c;
-    console.log(`distance from the center of the circle to the point: ${distance}`);
+  // //////////Haversine formula
+  const dLat = (objP.lat - objC.lat) * (Math.PI / 180);
+  const dLon = (objP.lon - objC.lon) * (Math.PI / 180);
+  const a =
+    (Math.sin(dLat / 2) * Math.sin(dLat / 2)) +
+    (Math.cos(objC.lat * (Math.PI / 180)) * Math.cos(objP.lat * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2));
+  const c = 2 * Math.asin(Math.sqrt(a));
+  const distance = radius * c;
 
-    if (distance <= r) {
-      // if the distance from the center of the circle to the point is less than or equal to the radius of the circle, the point is inside
-      console.log('the point is inside the circle');
-    } else {
-      console.log('the point is outside the circle');
-    }
-    rl.close();
-  });
-});
+  if (distance <= r) {
+    return true;
+  }
+  return false;
+};
+
+isInsidePolyCircle(objCircle, objPoint);
+
+export default isInsidePolyCircle;

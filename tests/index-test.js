@@ -35,4 +35,29 @@ describe('Test geopoints inside geopolygons', () => {
     assert.typeOf(putil.isInsidePolyCircle, 'function');
     assert.typeOf(putil.isInsidePolyCircle(circle, point), 'boolean');
   });
+
+  it('Point should be inside polygon', () => {
+    const polygon = [
+      { lat: 19, lng: -101 },
+      { lat: 20, lng: -101 },
+      { lat: 20, lng: -102 },
+      { lat: 19, lng: -102 },
+    ];
+    const point = { lat: 19.5, lng: -101.5 };
+
+    assert.isOk(putil.isInsidePolygon(polygon, point));
+  });
+
+  it('Point should be inside circle', () => {
+    const circle = {
+      center: {
+        lat: 19,
+        lng: -101,
+      },
+      radius: 21, // radius in km
+    };
+    const point = { lat: 19.003, lng: -101 };
+
+    assert.isOk(putil.isInsidePolyCircle(circle, point));
+  });
 });

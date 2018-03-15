@@ -1,5 +1,5 @@
-import { isInsidePolygon } from './polygon';
-import { isInsidePolyCircle } from './circle';
+import isInsidePolygon from './polygon';
+import isInsidePolyCircle from './circle';
 
 const putil = {
   isInsidePolygon,

@@ -1,6 +1,5 @@
 
-const r = 3;
-const radius = 6371; // radius of the earth in km
+const earthRadius = 6371; // radius of the earth in km
 // equatorial radius=6378km  polar radius=6357km  equivolume radius=6371km
 
 // isInsidePolyCircle(<Circle>, <Point>)
@@ -24,9 +23,9 @@ const isInsidePolyCircle = (objC, objP) => {
     (Math.sin(dLat / 2) * Math.sin(dLat / 2)) +
     (Math.cos(objC.lat * (Math.PI / 180)) * Math.cos(objP.lat * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2));
   const c = 2 * Math.asin(Math.sqrt(a));
-  const distance = radius * c;
+  const distance = earthRadius * c;
 
-  if (distance <= r) {
+  if (distance <= objCircle.radius) {
     return true;
   }
   return false;

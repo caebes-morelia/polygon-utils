@@ -1,9 +1,6 @@
 
-const polygonPoints1 = [[1, 3], [3, 3], [4, 4], [6, 4], [7, 3], [8, 5], [5, 7], [4, 5], [2, 6]]; // points that make up the polygon
-const objPoint = { lat: 19.7293, lon: -101.1754 };
-
 const isInsidePolygon = (polygonPoints, objP) => {
-  if (objP.lat < -90 || objP.lat > 90 || objP.lon < -180 || objP.lon > 180) {
+  if (objP.lat < -90 || objP.lat > 90 || objP.lng < -180 || objP.lng > 180) {
     const err = { message: 'the point is not a valid coordinate' };
     throw err;
   }
@@ -31,7 +28,7 @@ const isInsidePolygon = (polygonPoints, objP) => {
   }
 
   const x = objP.lat;
-  const y = objP.lon;
+  const y = objP.lng;
   let nextpoint;
   let borders = 0;
   let lx;
@@ -135,6 +132,5 @@ const isInsidePolygon = (polygonPoints, objP) => {
   return false;
 };
 
-isInsidePolygon(polygonPoints1, objPoint);
 
 export default isInsidePolygon;

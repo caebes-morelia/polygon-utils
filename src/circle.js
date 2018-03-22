@@ -4,12 +4,11 @@ const earthRadius = 6371; // radius of the earth in km
 
 const isInsidePolyCircle = (objC, objP) => {
   if (objC.lat < -90 || objC.lat > 90 || objC.lng < -180 || objC.lng > 180) {
-    const err = { message: 'the center of the circle is not a valid coordinate' };
-    throw err;
+    // const err = { message: 'the center of the circle is not a valid coordinate' };
+    throw Error(`the center of the circle [lat: ${objC.lat}, lng: ${objC.lng}] is not a valid coordinate`);
   }
   if (objP.lat < -90 || objP.lat > 90 || objP.lng < -180 || objP.lng > 180) {
-    const err = { message: 'the point is not a valid coordinate' };
-    throw err;
+    throw Error(`the point [lat: ${objP.lat}, lng: ${objP.lng}] is not a valid coordinate`);
   }
 
   // //////////Haversine formula

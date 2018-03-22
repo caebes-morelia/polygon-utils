@@ -83,4 +83,108 @@ describe('Test geopoints inside geopolygons', () => {
 
     assert.typeOf(putil.isInside(circle, point), 'boolean');
   });
+
+  it('isInsidePolygon should throw error on wrong invalid lat lng', () => {
+    /* const invalidPolygon2 = [
+      { lat: -92, lng: 182 },
+      { lat: -92, lng: 80 },
+      { lat: 85, lng: -182 },
+    ]; */
+    const invalidPolygon = [[-92, 182], [-92, 80], [85, -182]];
+    const point = { lat: 19, lng: -101 };
+    const errorMsgs = [];
+    try {
+      putil.isInsidePolygon(invalidPolygon, point);
+    } catch (error) {
+      errorMsgs.push(error);
+    }
+
+    assert.equal(errorMsgs[0].message, 'the polygon have a invalid point');
+    // assert.throws(putil.isInsidePolygon(invalidPolygon, point),
+    // { message: 'the point is not a valid coordinate' });
+  });
+
+  it('isInsidePolygon should throw error on wrong invalid lat lng point', () => {
+    const polygon = [
+      { lat: -87, lng: 172 },
+      { lat: -52, lng: 80 },
+      { lat: 85, lng: -122 },
+    ];
+    const point = { lat: 99, lng: -191 };
+    const point2 = { lat: 19, lng: -195 };
+    const point3 = { lat: 120, lng: -101 };
+    const errorMsgs = [];
+    try {
+      putil.isInsidePolygon(polygon, point);
+    } catch (error) {
+      errorMsgs.push(error);
+    }
+    try {
+      putil.isInsidePolygon(polygon, point2);
+    } catch (error) {
+      errorMsgs.push(error);
+    }
+    try {
+      putil.isInsidePolygon(polygon, point3);
+    } catch (error) {
+      errorMsgs.push(error);
+    }
+
+    assert.equal(errorMsgs.length, 3);
+    assert.equal(errorMsgs[0].message, `the point [lat: ${point.lat}, lng: ${point.lng}] is not a valid coordinate`);
+    assert.equal(errorMsgs[1].message, `the point [lat: ${point2.lat}, lng: ${point2.lng}] is not a valid coordinate`);
+    assert.equal(errorMsgs[2].message, `the point [lat: ${point3.lat}, lng: ${point3.lng}] is not a valid coordinate`);
+  });
+
+  it('isInsidePolyCircle should throw error on wrong invalid lat lng', () => {
+    const invalidCircle = {
+      lat: 219,
+      lng: -201,
+      radius: 21, // radius in km
+    };
+    const point = { lat: 19.003, lng: -101 };
+    const errorMsgs = [];
+    try {
+      putil.isInsidePolyCircle(invalidCircle, point);
+    } catch (error) {
+      errorMsgs.push(error);
+    }
+
+    assert.equal(errorMsgs.length, 1);
+    assert.equal(errorMsgs[0].message, `the center of the circle [lat: ${invalidCircle.lat}, lng: ${invalidCircle.lng}] is not a valid coordinate`);
+  });
+
+  it('isInsidePolyCircle should throw error on wrong invalid lat lng', () => {
+    const circle = {
+      lat: 19,
+      lng: -101,
+      radius: 21, // radius in km
+    };
+    const point = { lat: 199.003, lng: 211 };
+    const errorMsgs = [];
+    try {
+      putil.isInsidePolyCircle(circle, point);
+    } catch (error) {
+      errorMsgs.push(error);
+    }
+
+    assert.equal(errorMsgs.length, 1);
+    assert.equal(errorMsgs[0].message, `the point [lat: ${point.lat}, lng: ${point.lng}] is not a valid coordinate`);
+  });
+
+  it('the polygon should have at least 3 points', () => {
+    const invalidPolygon = [
+      { lat: -87, lng: 172 },
+      { lat: -52, lng: 80 },
+    ];
+    const point = { lat: 19.003, lng: -101 };
+    const errorMsgs = [];
+    try {
+      putil.isInsidePolygon(invalidPolygon, point);
+    } catch (error) {
+      errorMsgs.push(error);
+    }
+
+    assert.equal(errorMsgs[0].message, 'the polygon should have at least 3 points');
+  });
 });

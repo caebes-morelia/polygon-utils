@@ -1,8 +1,19 @@
 
 const isInsidePolygon = (polygonPoints, objP) => {
   if (objP.lat < -90 || objP.lat > 90 || objP.lng < -180 || objP.lng > 180) {
-    const err = { message: 'the point is not a valid coordinate' };
-    throw err;
+    // const err = { message: 'the point is not a valid coordinate' };
+    throw Error(`the point [lat: ${objP.lat}, lng: ${objP.lng}] is not a valid coordinate`);
+  }
+
+  for (let i = 0; i < polygonPoints.length; i += 1) {
+    if (polygonPoints[i][0] < -90 || polygonPoints[i][0] > 90 || polygonPoints[i][1] < -180 || polygonPoints[i][1] > 180) {
+      // throw Error(`the polygon point [lat: ${polygonPoints[i][0]}, lng: ${polygonPoints[i][1]}] is not a valid coordinate`);
+      throw Error('the polygon have a invalid point');
+    }
+  }
+
+  if (polygonPoints.length < 3) {
+    throw Error('the polygon should have at least 3 points');
   }
 
   const orderXaxis = polygonPoints.slice();

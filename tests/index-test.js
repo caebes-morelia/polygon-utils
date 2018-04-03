@@ -85,12 +85,11 @@ describe('Test geopoints inside geopolygons', () => {
   });
 
   it('isInsidePolygon should throw error on wrong invalid lat lng', () => {
-    /* const invalidPolygon2 = [
+    const invalidPolygon = [
       { lat: -92, lng: 182 },
       { lat: -92, lng: 80 },
       { lat: 85, lng: -182 },
-    ]; */
-    const invalidPolygon = [[-92, 182], [-92, 80], [85, -182]];
+    ];
     const point = { lat: 19, lng: -101 };
     const errorMsgs = [];
     try {
@@ -100,8 +99,6 @@ describe('Test geopoints inside geopolygons', () => {
     }
 
     assert.equal(errorMsgs[0].message, 'the polygon have a invalid point');
-    // assert.throws(putil.isInsidePolygon(invalidPolygon, point),
-    // { message: 'the point is not a valid coordinate' });
   });
 
   it('isInsidePolygon should throw error on wrong invalid lat lng point', () => {
@@ -131,9 +128,9 @@ describe('Test geopoints inside geopolygons', () => {
     }
 
     assert.equal(errorMsgs.length, 3);
-    assert.equal(errorMsgs[0].message, `the point [lat: ${point.lat}, lng: ${point.lng}] is not a valid coordinate`);
-    assert.equal(errorMsgs[1].message, `the point [lat: ${point2.lat}, lng: ${point2.lng}] is not a valid coordinate`);
-    assert.equal(errorMsgs[2].message, `the point [lat: ${point3.lat}, lng: ${point3.lng}] is not a valid coordinate`);
+    assert.equal(errorMsgs[0].message, `the point {lat: ${point.lat}, lng: ${point.lng}} is not a valid coordinate`);
+    assert.equal(errorMsgs[1].message, `the point {lat: ${point2.lat}, lng: ${point2.lng}} is not a valid coordinate`);
+    assert.equal(errorMsgs[2].message, `the point {lat: ${point3.lat}, lng: ${point3.lng}} is not a valid coordinate`);
   });
 
   it('isInsidePolyCircle should throw error on wrong invalid lat lng', () => {
@@ -151,7 +148,7 @@ describe('Test geopoints inside geopolygons', () => {
     }
 
     assert.equal(errorMsgs.length, 1);
-    assert.equal(errorMsgs[0].message, `the center of the circle [lat: ${invalidCircle.lat}, lng: ${invalidCircle.lng}] is not a valid coordinate`);
+    assert.equal(errorMsgs[0].message, `the center of the circle {lat: ${invalidCircle.lat}, lng: ${invalidCircle.lng}} is not a valid coordinate`);
   });
 
   it('isInsidePolyCircle should throw error on wrong invalid lat lng', () => {
@@ -185,6 +182,6 @@ describe('Test geopoints inside geopolygons', () => {
       errorMsgs.push(error);
     }
 
-    assert.equal(errorMsgs[0].message, 'the polygon should have at least 3 points');
+    assert.equal(errorMsgs[0].message, 'the polygon must have at least 3 points');
   });
 });

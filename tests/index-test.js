@@ -98,7 +98,7 @@ describe('Test geopoints inside geopolygons', () => {
       errorMsgs.push(error);
     }
 
-    assert.equal(errorMsgs[0].message, 'the polygon have a invalid point');
+    assert.equal(errorMsgs[0].message, `the point {lat: ${invalidPolygon[0].lat}, lng: ${invalidPolygon[0].lng}} of the polygon is not a valid coordinate`);
   });
 
   it('isInsidePolygon should throw error on wrong invalid lat lng point', () => {

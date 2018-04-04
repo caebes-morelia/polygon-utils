@@ -151,7 +151,7 @@ describe('Test geopoints inside geopolygons', () => {
     assert.equal(errorMsgs[0].message, `the center of the circle {lat: ${invalidCircle.lat}, lng: ${invalidCircle.lng}} is not a valid coordinate`);
   });
 
-  it('isInsidePolyCircle should throw error on wrong invalid lat lng', () => {
+  it('isInsidePolyCircle should throw error on wrong invalid lat lng point', () => {
     const circle = {
       lat: 19,
       lng: -101,
@@ -166,7 +166,7 @@ describe('Test geopoints inside geopolygons', () => {
     }
 
     assert.equal(errorMsgs.length, 1);
-    assert.equal(errorMsgs[0].message, `the point [lat: ${point.lat}, lng: ${point.lng}] is not a valid coordinate`);
+    assert.equal(errorMsgs[0].message, `the point {lat: ${point.lat}, lng: ${point.lng}} is not a valid coordinate`);
   });
 
   it('the polygon should have at least 3 points', () => {

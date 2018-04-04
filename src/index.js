@@ -3,9 +3,9 @@ import isInsidePolyCircle from './circle';
 
 const isInside = (obj, point) => {
   if (obj.length === undefined) {
-    return isInsidePolygon(obj, point);
+    return isInsidePolyCircle(obj, point);
   }
-  return isInsidePolyCircle(obj, point);
+  return isInsidePolygon(obj, point);
 };
 
 const putil = {

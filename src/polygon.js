@@ -4,7 +4,7 @@ const isInsidePolygon = (polygonPoints, objP) => {
     throw Error(`the point {lat: ${objP.lat}, lng: ${objP.lng}} is not a valid coordinate`);
   }
 
-  polygonPoints.array.forEach((point) => {
+  polygonPoints.forEach((point) => {
     if (point.lat < -90 || point.lat > 90 || point.lng < -180 || point.lng > 180) {
       throw Error(`the point {lat: ${point.lat}, lng: ${point.lng}} of the polygon is not a valid coordinate`);
     }
@@ -14,25 +14,25 @@ const isInsidePolygon = (polygonPoints, objP) => {
     throw Error('the polygon must have at least 3 points');
   }
 
-  const orderXaxis = polygonPoints.slice();
-  orderXaxis.sort((a, b) => a.lat - b.lat); // are the points of the polygon but ordered from lowest to highest on the X axis
+  const orderLat = polygonPoints.slice();
+  orderLat.sort((a, b) => a.lat - b.lat); // are the points of the polygon but ordered from lowest to highest in latitude
 
-  const liminx = orderXaxis[0].lat;
-  const limaxx = orderXaxis[orderXaxis.length - 1].lat;
-  let liminy = 1000;
-  let limaxy = -1000;
+  const liminlat = orderLat[0].lat;
+  const limaxlat = orderLat[orderLat.length - 1].lat;
+  let liminlng = 1000;
+  let limaxlng = -1000;
 
   for (let c = 0; c < polygonPoints.length; c += 1) {
-    if (polygonPoints[c].lng < liminy) { // find the minimum limit in Y
-      [, liminy] = polygonPoints[c];
-    } else if (polygonPoints[c].lng > limaxy) { // find the maximum limit in Y
-      [, limaxy] = polygonPoints[c];
+    if (polygonPoints[c].lng < liminlng) { // find the minimum limit in Y
+      [, liminlng] = polygonPoints[c];
+    } else if (polygonPoints[c].lng > limaxlng) { // find the maximum limit in Y
+      [, limaxlng] = polygonPoints[c];
     }
   }
 
-  for (let c = 1; c < orderXaxis.length; c += 1) {
-    if (orderXaxis[c].lat === orderXaxis[c - 1].lat) { // look for repeated numbers on X axis
-      orderXaxis.splice(c, 1);
+  for (let c = 1; c < orderLat.length; c += 1) {
+    if (orderLat[c].lat === orderLat[c - 1].lat) { // look for repeated numbers on X axis
+      orderLat.splice(c, 1);
     }
   }
 
@@ -45,18 +45,18 @@ const isInsidePolygon = (polygonPoints, objP) => {
   let angle;
   let anglePoint;
 
-  if (x > liminx && x < limaxx && y > liminy && y < limaxy) {
+  if (x > liminlat && x < limaxlat && y > liminlng && y < limaxlng) {
     // If the point is within the limits of the polygon
     let i;
-    for (i = 0; i < orderXaxis.length; i += 1) { // define where you will paint the line on the X axis
-      if (x <= orderXaxis[i].lat) {
+    for (i = 0; i < orderLat.length; i += 1) { // define where you will paint the line on the X axis
+      if (x <= orderLat[i].lat) {
         break;
       }
     }
 
-    for (let axisx; i < orderXaxis.length; i += 1) {
+    for (let axisx; i < orderLat.length; i += 1) {
       // the point is traveled along the X axis to see how many borders it crosses
-      [axisx] = orderXaxis[i];
+      [axisx] = orderLat[i];
       for (let point = 0; point < polygonPoints.length; point += 1) {
         // look in the polygon points array a point that is the same distance from X as the point travel
         if (polygonPoints[point].lat === axisx) {

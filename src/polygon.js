@@ -24,9 +24,9 @@ const isInsidePolygon = (polygonPoints, objP) => {
 
   for (let c = 0; c < polygonPoints.length; c += 1) {
     if (polygonPoints[c].lng < liminlng) { // find the minimum limit in Y
-      [, liminlng] = polygonPoints[c];
+      liminlng = polygonPoints[c].lng;
     } else if (polygonPoints[c].lng > limaxlng) { // find the maximum limit in Y
-      [, limaxlng] = polygonPoints[c];
+      limaxlng = polygonPoints[c].lng;
     }
   }
 
@@ -54,12 +54,12 @@ const isInsidePolygon = (polygonPoints, objP) => {
       }
     }
 
-    for (let axisx; i < orderLat.length; i += 1) {
+    for (let latAxis; i < orderLat.length; i += 1) {
       // the point is traveled along the X axis to see how many borders it crosses
-      [axisx] = orderLat[i];
+      latAxis = orderLat[i].lat;
       for (let point = 0; point < polygonPoints.length; point += 1) {
         // look in the polygon points array a point that is the same distance from X as the point travel
-        if (polygonPoints[point].lat === axisx) {
+        if (polygonPoints[point].lat === latAxis) {
           // if find a point of the polygon that is at the same height on the X axis as the point
           if (point + 1 === polygonPoints.length) { // connects the last point with the first one of the polygon
             nextpoint = 0;
@@ -69,7 +69,7 @@ const isInsidePolygon = (polygonPoints, objP) => {
           // ---------------------------------BORDER UP--------------------------------------------
           if (polygonPoints[point].lng >= y) {
             // if the polygon's found point is higher on the Y axis
-            if (polygonPoints[point - 1].lng <= y && polygonPoints[point - 1].lat <= axisx) {
+            if (polygonPoints[point - 1].lng <= y && polygonPoints[point - 1].lat <= latAxis) {
               if (borders === 0 && x <= polygonPoints[point].lat && x > polygonPoints[point - 1].lat) {
                 lx = Math.abs(polygonPoints[point].lat - polygonPoints[point - 1].lat);
                 ly = Math.abs(polygonPoints[point].lng - polygonPoints[point - 1].lng);
@@ -82,7 +82,7 @@ const isInsidePolygon = (polygonPoints, objP) => {
                 }
               }
               borders += 1;
-            } else if (polygonPoints[nextpoint].lng <= y && polygonPoints[nextpoint].lat <= axisx) {
+            } else if (polygonPoints[nextpoint].lng <= y && polygonPoints[nextpoint].lat <= latAxis) {
               // if the previous or next point of the point found is below the point on the Y axis
               // and behind the X axis of the current point and in front of X
               if (borders === 0 && x <= polygonPoints[point].lat && x > polygonPoints[nextpoint].lat) {
@@ -97,11 +97,14 @@ const isInsidePolygon = (polygonPoints, objP) => {
                 }
               }
               borders += 1;
+              if (polygonPoints[nextpoint].lat === latAxis) {
+                point += 1;
+              }
             }
           } else if (polygonPoints[point].lng < y) {
             // -----------------------------------BORDER DOWN------------------------------------------
             // if the found point of the polygon is lower on the Y axis
-            if (polygonPoints[point - 1].lng >= y && polygonPoints[point - 1].lat <= axisx) {
+            if (polygonPoints[point - 1].lng >= y && polygonPoints[point - 1].lat <= latAxis) {
               // if the previous or next point of the point found are above the point on the Y axis & back on the X axis
               if (borders === 0 && x <= polygonPoints[point].lat && x > polygonPoints[point - 1].lat) {
                 lx = Math.abs(polygonPoints[point].lat - polygonPoints[point - 1].lat);
@@ -115,7 +118,7 @@ const isInsidePolygon = (polygonPoints, objP) => {
                 }
               }
               borders += 1;
-            } else if (polygonPoints[nextpoint].lng >= y && polygonPoints[nextpoint].lat <= axisx) {
+            } else if (polygonPoints[nextpoint].lng >= y && polygonPoints[nextpoint].lat <= latAxis) {
               if (borders === 0 && x <= polygonPoints[point].lat && x > polygonPoints[nextpoint].lat) {
                 lx = Math.abs(polygonPoints[point].lat - polygonPoints[nextpoint].lat);
                 ly = Math.abs(polygonPoints[point].lng - polygonPoints[nextpoint].lng);
@@ -128,6 +131,9 @@ const isInsidePolygon = (polygonPoints, objP) => {
                 }
               }
               borders += 1;
+              if (polygonPoints[nextpoint].lat === latAxis) {
+                point += 1;
+              }
             }
           }
         }
@@ -136,9 +142,9 @@ const isInsidePolygon = (polygonPoints, objP) => {
   }
 
   if (borders % 2 === 0) {
-    return true;
+    return false;
   }
-  return false;
+  return true;
 };
 
 

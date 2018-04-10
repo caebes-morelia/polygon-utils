@@ -35,15 +35,33 @@ describe('Test geopoints inside geopolygons', () => {
   });
 
   it('Point should be inside polygon', () => {
-    const polygon = [
+    const polygon = [[
       { lat: 19, lng: -101 },
       { lat: 20, lng: -101 },
       { lat: 20, lng: -102 },
       { lat: 19, lng: -102 },
+    ],
+    [
+      { lat: 19.68784, lng: -101.23815 },
+      { lat: 19.68639, lng: -101.20588 },
+      { lat: 19.69593, lng: -101.19077 },
+      { lat: 19.69657, lng: -101.16777 },
+      { lat: 19.68784, lng: -101.15816 },
+      { lat: 19.7116, lng: -101.147 },
+      { lat: 19.72935, lng: -101.17455 },
+      { lat: 19.72033, lng: -101.18751 },
+      { lat: 19.72695, lng: -101.2112 },
+    ],
     ];
-    const point = { lat: 19.5, lng: -101.5 };
+    const point = { lat: 19.9, lng: -101.9 };
+    const point2 = { lat: 19.70926, lng: -101.19584 };
+    const point3 = { lat: 19.69334, lng: -101.19884 };
+    const point4 = { lat: 19.69043, lng: -101.19627 };
 
-    assert.isOk(putil.isInsidePolygon(polygon, point));
+    assert.isOk(putil.isInsidePolygon(polygon[0], point));
+    assert.isOk(putil.isInsidePolygon(polygon[1], point2));
+    assert.isOk(putil.isInsidePolygon(polygon[1], point3));
+    assert.isNotOk(putil.isInsidePolygon(polygon[1], point4));
   });
 
   it('Point should be inside circle', () => {
@@ -102,17 +120,23 @@ describe('Test geopoints inside geopolygons', () => {
   });
 
   it('isInsidePolygon should throw error on wrong invalid lat lng point', () => {
-    const polygon = [
-      { lat: -87, lng: 172 },
-      { lat: -52, lng: 80 },
-      { lat: 85, lng: -122 },
-    ];
+    const polygon = [[
+      { lat: -87, lng: 172 }, { lat: -52, lng: 80 }, { lat: 85, lng: -122 },
+    ],
+    [
+      { lat: 19, lng: -101 },
+      { lat: 19.0092, lng: -101.0002 },
+      { lat: 19.0097, lng: -101.0011 },
+      { lat: 19.0103, lng: -101.0252 },
+    ]];
     const point = { lat: 99, lng: -191 };
     const point2 = { lat: 19, lng: -195 };
     const point3 = { lat: 120, lng: -101 };
     const errorMsgs = [];
     try {
-      putil.isInsidePolygon(polygon, point);
+      for (let i = 0; i < polygon.length; i += 1) {
+        putil.isInsidePolygon(polygon[i], point);
+      }
     } catch (error) {
       errorMsgs.push(error);
     }

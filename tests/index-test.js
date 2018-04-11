@@ -52,16 +52,55 @@ describe('Test geopoints inside geopolygons', () => {
       { lat: 19.72033, lng: -101.18751 },
       { lat: 19.72695, lng: -101.2112 },
     ],
+    [
+      { lat: 19.81281, lng: -101.80171 },
+      { lat: 19.8116, lng: -101.79107 },
+      { lat: 19.82339, lng: -101.77803 },
+      { lat: 19.82137, lng: -101.78712 },
+      { lat: 19.82678, lng: -101.79553 },
+      { lat: 19.82848, lng: -101.78395 },
+      { lat: 19.82969, lng: -101.80154 },
+    ],
+    [
+      { lat: 19.8749, lng: -101.14082 },
+      { lat: 19.90105, lng: -101.11919 },
+      { lat: 19.91299, lng: -101.15558 },
+    ],
+    [
+      { lat: 19.65826, lng: -101.51942 },
+      { lat: 19.64759, lng: -101.53264 },
+      { lat: 19.66473, lng: -101.53349 },
+      { lat: 19.67346, lng: -101.5201 },
+    ],
+    [
+      { lat: 19.8202, lng: -101.58632 },
+      { lat: 19.8269, lng: -101.5801 },
+      { lat: 19.81976, lng: -101.59194 },
+      { lat: 19.81201, lng: -101.58246 },
+    ],
+    [
+      { lat: 19.80353, lng: -101.39625 },
+      { lat: 19.84551, lng: -101.38114 },
+      { lat: 19.83712, lng: -101.49101 },
+      { lat: 19.79642, lng: -101.45393 },
+      { lat: 19.7667, lng: -101.51023 },
+    ],
     ];
-    const point = { lat: 19.9, lng: -101.9 };
-    const point2 = { lat: 19.70926, lng: -101.19584 };
-    const point3 = { lat: 19.69334, lng: -101.19884 };
-    const point4 = { lat: 19.69043, lng: -101.19627 };
+    const point = [
+      { lat: 19.9, lng: -101.9 },
+      { lat: 19.70926, lng: -101.19584 },
+      { lat: 19.69334, lng: -101.19884 },
+      { lat: 19.69043, lng: -101.19627 },
+      { lat: 19.81637, lng: -101.78893 },
+      { lat: 19.81532, lng: -101.78558 },
+    ];
 
-    assert.isOk(putil.isInsidePolygon(polygon[0], point));
-    assert.isOk(putil.isInsidePolygon(polygon[1], point2));
-    assert.isOk(putil.isInsidePolygon(polygon[1], point3));
-    assert.isNotOk(putil.isInsidePolygon(polygon[1], point4));
+    assert.isOk(putil.isInsidePolygon(polygon[0], point[0]));
+    assert.isOk(putil.isInsidePolygon(polygon[1], point[1]));
+    assert.isOk(putil.isInsidePolygon(polygon[1], point[2]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[1], point[3]));
+    assert.isOk(putil.isInsidePolygon(polygon[2], point[4]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[2], point[5]));
   });
 
   it('Point should be inside circle', () => {

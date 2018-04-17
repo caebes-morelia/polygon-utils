@@ -88,19 +88,37 @@ describe('Test geopoints inside geopolygons', () => {
     ];
     const point = [
       { lat: 19.9, lng: -101.9 },
+      { lat: 19, lng: -102 },
+      { lat: 20, lng: -101 },
+      { lat: 19, lng: -101.5 },
       { lat: 19.70926, lng: -101.19584 },
       { lat: 19.69334, lng: -101.19884 },
       { lat: 19.69043, lng: -101.19627 },
       { lat: 19.81637, lng: -101.78893 },
-      { lat: 19.81532, lng: -101.78558 },
+      { lat: 19.81721, lng: -101.78176 },
+      { lat: 19.88362, lng: -101.13601 },
+      { lat: 19.88297, lng: -101.147 },
+      { lat: 19.65131, lng: -101.52963 },
+      { lat: 19.64921, lng: -101.52997 },
+      { lat: 19.81528, lng: -101.58559 },
+      { lat: 19.81342, lng: -101.58473 },
     ];
 
     assert.isOk(putil.isInsidePolygon(polygon[0], point[0]));
-    assert.isOk(putil.isInsidePolygon(polygon[1], point[1]));
-    assert.isOk(putil.isInsidePolygon(polygon[1], point[2]));
-    assert.isNotOk(putil.isInsidePolygon(polygon[1], point[3]));
-    assert.isOk(putil.isInsidePolygon(polygon[2], point[4]));
-    assert.isNotOk(putil.isInsidePolygon(polygon[2], point[5]));
+    assert.isOk(putil.isInsidePolygon(polygon[0], point[1]));
+    assert.isOk(putil.isInsidePolygon(polygon[0], point[2]));
+    assert.isOk(putil.isInsidePolygon(polygon[0], point[3]));
+    assert.isOk(putil.isInsidePolygon(polygon[1], point[4]));
+    assert.isOk(putil.isInsidePolygon(polygon[1], point[5]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[1], point[6]));
+    assert.isOk(putil.isInsidePolygon(polygon[2], point[7]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[2], point[8]));
+    assert.isOk(putil.isInsidePolygon(polygon[3], point[9]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[3], point[10]));
+    assert.isOk(putil.isInsidePolygon(polygon[4], point[11]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[4], point[12]));
+    assert.isOk(putil.isInsidePolygon(polygon[5], point[13]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[5], point[14]));
   });
 
   it('Point should be inside circle', () => {

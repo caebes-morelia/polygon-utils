@@ -36,13 +36,13 @@ describe('Test geopoints inside geopolygons', () => {
 
   it('Point should be inside polygon', () => {
     const polygon = [[
-      { lat: 19, lng: -101 },
+      { lat: 19, lng: -101 }, // poligono 0
       { lat: 20, lng: -101 },
       { lat: 20, lng: -102 },
       { lat: 19, lng: -102 },
     ],
     [
-      { lat: 19.68784, lng: -101.23815 },
+      { lat: 19.68784, lng: -101.23815 }, // poligono 1
       { lat: 19.68639, lng: -101.20588 },
       { lat: 19.69593, lng: -101.19077 },
       { lat: 19.69657, lng: -101.16777 },
@@ -53,7 +53,7 @@ describe('Test geopoints inside geopolygons', () => {
       { lat: 19.72695, lng: -101.2112 },
     ],
     [
-      { lat: 19.81281, lng: -101.80171 },
+      { lat: 19.81281, lng: -101.80171 }, // poligono 2
       { lat: 19.8116, lng: -101.79107 },
       { lat: 19.82339, lng: -101.77803 },
       { lat: 19.82137, lng: -101.78712 },
@@ -62,28 +62,45 @@ describe('Test geopoints inside geopolygons', () => {
       { lat: 19.82969, lng: -101.80154 },
     ],
     [
-      { lat: 19.8749, lng: -101.14082 },
+      { lat: 19.8749, lng: -101.14082 }, // poligono 3
       { lat: 19.90105, lng: -101.11919 },
       { lat: 19.91299, lng: -101.15558 },
     ],
     [
-      { lat: 19.65826, lng: -101.51942 },
+      { lat: 19.65826, lng: -101.51942 }, // poligono 4
       { lat: 19.64759, lng: -101.53264 },
       { lat: 19.66473, lng: -101.53349 },
       { lat: 19.67346, lng: -101.5201 },
     ],
     [
-      { lat: 19.8202, lng: -101.58632 },
+      { lat: 19.8202, lng: -101.58632 }, // poligono 5
       { lat: 19.8269, lng: -101.5801 },
       { lat: 19.81976, lng: -101.59194 },
       { lat: 19.81201, lng: -101.58246 },
     ],
     [
-      { lat: 19.80353, lng: -101.39625 },
+      { lat: 19.80353, lng: -101.39625 }, // poligono 6
       { lat: 19.84551, lng: -101.38114 },
       { lat: 19.83712, lng: -101.49101 },
       { lat: 19.79642, lng: -101.45393 },
       { lat: 19.7667, lng: -101.51023 },
+    ],
+    [
+      { lat: 19.77187, lng: -101.33308 }, // poligono 7
+      { lat: 19.80353, lng: -101.26235 },
+      { lat: 19.82678, lng: -101.31042 },
+      { lat: 19.79771, lng: -101.29119 },
+    ],
+    [
+      { lat: 19.75184, lng: -101.38732 }, // poligono 8
+      { lat: 19.70595, lng: -101.41067 },
+      { lat: 19.63418, lng: -101.41136 },
+      { lat: 19.71112, lng: -101.39076 },
+    ],
+    [
+      { lat: 19.65164, lng: -101.1985 }, // poligono 9
+      { lat: 19.63676, lng: -101.23764 },
+      { lat: 19.66651, lng: -101.32072 },
     ],
     ];
     const point = [
@@ -102,6 +119,14 @@ describe('Test geopoints inside geopolygons', () => {
       { lat: 19.64921, lng: -101.52997 },
       { lat: 19.81528, lng: -101.58559 },
       { lat: 19.81342, lng: -101.58473 },
+      { lat: 19.81322, lng: -101.4141 },
+      { lat: 19.77381, lng: -101.47315 },
+      { lat: 19.79367, lng: -101.28931 },
+      { lat: 19.78124, lng: -101.3039 },
+      { lat: 19.72372, lng: -101.39968 },
+      { lat: 19.66651, lng: -101.40003 },
+      { lat: 19.65131, lng: -101.24759 },
+      { lat: 19.64032, lng: -101.21841 },
     ];
 
     assert.isOk(putil.isInsidePolygon(polygon[0], point[0]));
@@ -119,6 +144,14 @@ describe('Test geopoints inside geopolygons', () => {
     assert.isNotOk(putil.isInsidePolygon(polygon[4], point[12]));
     assert.isOk(putil.isInsidePolygon(polygon[5], point[13]));
     assert.isNotOk(putil.isInsidePolygon(polygon[5], point[14]));
+    assert.isOk(putil.isInsidePolygon(polygon[6], point[15]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[6], point[16]));
+    assert.isOk(putil.isInsidePolygon(polygon[7], point[17]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[7], point[18]));
+    assert.isOk(putil.isInsidePolygon(polygon[8], point[19]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[8], point[20]));
+    // assert.isOk(putil.isInsidePolygon(polygon[9], point[21]));
+    assert.isNotOk(putil.isInsidePolygon(polygon[9], point[22]));
   });
 
   it('Point should be inside circle', () => {

@@ -1,157 +1,177 @@
 
-const polygonPoints = [[1, 3], [3, 3], [4, 4], [6, 4], [7, 3], [8, 5], [5, 7], [4, 5], [2, 6]]; // points that make up the polygon
-const orderXaxis = polygonPoints.slice();
-orderXaxis.sort(); // are the points of the polygon but ordered from lowest to highest on the X axis
+const isInsidePolygon = (polygonPoints, objP) => {
+  if (objP.lat < -90 || objP.lat > 90 || objP.lng < -180 || objP.lng > 180) {
+    throw Error(`the point {lat: ${objP.lat}, lng: ${objP.lng}} is not a valid coordinate`);
+  }
 
-const liminx = orderXaxis[0][0];
-const limaxx = orderXaxis[orderXaxis.length - 1][0];
-let liminy = 1000;
-let limaxy = -1000;
+  polygonPoints.forEach((point) => {
+    if (point.lat < -90 || point.lat > 90 || point.lng < -180 || point.lng > 180) {
+      throw Error(`the point {lat: ${point.lat}, lng: ${point.lng}} of the polygon is not a valid coordinate`);
+    }
+  });
 
-for (let c = 0; c < polygonPoints.length; c += 1) {
-  if (polygonPoints[c][1] < liminy) {
-    [, liminy] = polygonPoints[c];
-  } else if (polygonPoints[c][1] > limaxy) {
-    // find the minimum limit in Y
-    [, limaxy] = polygonPoints[c];
-  } // find the maximum limit in Y
-}
+  if (polygonPoints.length < 3) {
+    throw Error('the polygon must have at least 3 points');
+  }
 
-for (let c = 1; c < orderXaxis.length; c += 1) {
-  if (orderXaxis[c][0] === orderXaxis[c - 1][0]) {
-    orderXaxis.splice(c, 1);
-  } // look for repeated numbers on X axis
-}
+  const orderLat = polygonPoints.slice();
+  orderLat.sort((a, b) => a.lat - b.lat); // are the points of the polygon but ordered from lowest to highest in latitude
 
-const readline = require('readline');
+  const liminlat = orderLat[0].lat;
+  const limaxlat = orderLat[orderLat.length - 1].lat;
+  let liminlng = 1000;
+  let limaxlng = -1000;
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+  for (let c = 0; c < polygonPoints.length; c += 1) {
+    if (polygonPoints[c].lng < liminlng) { // find the minimum limit in Y
+      liminlng = polygonPoints[c].lng;
+    } else if (polygonPoints[c].lng > limaxlng) { // find the maximum limit in Y
+      limaxlng = polygonPoints[c].lng;
+    }
+  }
 
-let x;
-let y;
-let nextpoint;
-let borders = 0;
-let lx;
-let ly;
-let angle;
-let anglePoint;
-rl.question('enter the X coordinate of the point: ', (answer) => {
-  x = answer;
-  rl.question('enter the Y coordinate of the point: ', (answer2) => {
-    y = answer2;
+  for (let c = 1; c < orderLat.length; c += 1) {
+    if (orderLat[c].lat === orderLat[c - 1].lat) { // look for repeated numbers on X axis
+      orderLat.splice(c, 1);
+    }
+  }
 
-    if (x > liminx && x < limaxx && y > liminy && y < limaxy) {
-      // If the point is within the limits of the polygon
-      let i;
-      for (i = 0; i < orderXaxis.length; i += 1) {
-        if (x <= orderXaxis[i][0]) {
-          break;
-        }
-      } // define where you will paint the line on the X axis
+  const x = objP.lat;
+  const y = objP.lng;
+  let previousPoint;
+  let nextPoint;
+  let borders = 0;
+  let lx;
+  let ly;
+  let angle;
+  let anglePoint;
 
-      for (let axisx; i < orderXaxis.length; i += 1) {
-        // the point is traveled along the X axis to see how many borders it crosses
-        [axisx] = orderXaxis[i];
-        for (let point = 0; point < polygonPoints.length; point += 1) {
-          // look in the polygon points array a point that is the same distance from X as the point travel
-          if (polygonPoints[point][0] === axisx) {
-            // if find a point of the polygon that is at the same height on the X axis as the point
-            if (point + 1 === polygonPoints.length) {
-              nextpoint = 0;
-            } else {
-              nextpoint = point + 1;
-            } // connects the last point with the first one of the polygon
-            // BORDER UP
-            if (polygonPoints[point][1] >= y) {
-              // if the polygon's found point is higher on the Y axis
-              if (polygonPoints[point - 1][1] <= y && polygonPoints[point - 1][0] <= axisx) {
-                if (borders === 0 && x <= polygonPoints[point][0] && x > polygonPoints[point - 1][0]) {
-                  lx = Math.abs(polygonPoints[point][0] - polygonPoints[point - 1][0]);
-                  ly = Math.abs(polygonPoints[point][1] - polygonPoints[point - 1][1]);
-                  angle = Math.atan(ly / lx) * (180 / Math.PI);
-                  console.log(`angle1: ${angle}`);
-                  lx = Math.abs(polygonPoints[point][0] - x);
-                  ly = Math.abs(polygonPoints[point][1] - y);
-                  anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
-                  console.log(`angle point1: ${anglePoint}`);
-                  if (anglePoint > angle) {
-                    borders -= 1;
-                  }
-                }
-                borders += 1;
-                console.log('1');
-              } else if (polygonPoints[nextpoint][1] <= y && polygonPoints[nextpoint][0] <= axisx) {
-                // if the previous or next point of the point found is below the point on the Y axis
-                // and behind the X axis of the current point and in front of X
-                if (borders === 0 && x <= polygonPoints[point][0] && x > polygonPoints[nextpoint][0]) {
-                  lx = Math.abs(polygonPoints[point][0] - polygonPoints[nextpoint][0]);
-                  ly = Math.abs(polygonPoints[point][1] - polygonPoints[nextpoint][1]);
-                  angle = Math.atan(ly / lx) * (180 / Math.PI);
-                  console.log(`angleulo2: ${angle}`);
-                  lx = Math.abs(polygonPoints[point][0] - x);
-                  ly = Math.abs(polygonPoints[point][1] - y);
-                  anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
-                  console.log(`angleulo point2: ${anglePoint}`);
-                  if (anglePoint > angle) {
-                    borders -= 1;
-                  }
-                }
-                borders += 1;
-                console.log(`point: ${point}`);
-                console.log(`verticeX: ${polygonPoints[point - 1][0]}`);
+  if (x >= liminlat && x <= limaxlat && y >= liminlng && y <= limaxlng) {
+    // If the point is within the limits of the polygon
+    let i;
+    for (i = 0; i < orderLat.length; i += 1) { // define where you will paint the line on the X axis
+      if (x <= orderLat[i].lat) {
+        break;
+      }
+    }
+
+    for (let latAxis; i < orderLat.length; i += 1) {
+      // the point is traveled along the X axis to see how many borders it crosses
+      latAxis = orderLat[i].lat;
+      for (let point = 0; point < polygonPoints.length; point += 1) {
+        // look in the polygon points array a point that is the same distance from X as the point travel
+        if (polygonPoints[point].lat === latAxis) {
+          // if find a point of the polygon that is at the same height on the X axis as the point
+          if (point === 0) {
+            previousPoint = polygonPoints.length - 1;
+          } else {
+            previousPoint = point - 1;
+          }
+          if (point + 1 === polygonPoints.length) { // connects the last point with the first one of the polygon
+            nextPoint = 0;
+          } else {
+            nextPoint = point + 1;
+          }
+          // ---------------------------------BORDER UP--------------------------------------------
+          if (polygonPoints[point].lng >= y) {
+            // if the polygon's found point is higher on the Y axis
+            if (polygonPoints[previousPoint].lng <= y && polygonPoints[previousPoint].lat <= latAxis) {
+              if (polygonPoints[point].lng === polygonPoints[previousPoint].lng) {
+                return true; // the point is on a vertical border
               }
-            } else if (polygonPoints[point][1] < y) {
-              // BORDER DOWN
-              // if the found point of the polygon is lower on the Y axis
-              if (polygonPoints[point - 1][1] >= y && polygonPoints[point - 1][0] <= axisx) {
-                // if the previous or next point of the point found are above the point on the Y axis & back on the X axis
-                if (borders === 0 && x <= polygonPoints[point][0] && x > polygonPoints[point - 1][0]) {
-                  lx = Math.abs(polygonPoints[point][0] - polygonPoints[point - 1][0]);
-                  ly = Math.abs(polygonPoints[point][1] - polygonPoints[point - 1][1]);
-                  angle = Math.atan(ly / lx) * (180 / Math.PI);
-                  console.log(`angleulo1: ${angle}`);
-                  lx = Math.abs(polygonPoints[point][0] - x);
-                  ly = Math.abs(polygonPoints[point][1] - y);
-                  anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
-                  console.log(`angleulo point1: ${anglePoint}`);
-                  if (anglePoint > angle) {
-                    borders -= 1;
-                  }
+              if (borders === 0 && x <= polygonPoints[point].lat && x >= polygonPoints[previousPoint].lat) {
+                lx = Math.abs(polygonPoints[point].lat - polygonPoints[previousPoint].lat);
+                ly = Math.abs(polygonPoints[point].lng - polygonPoints[previousPoint].lng);
+                angle = Math.atan(ly / lx) * (180 / Math.PI);
+                lx = Math.abs(polygonPoints[point].lat - x);
+                ly = Math.abs(polygonPoints[point].lng - y);
+                anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
+                if (anglePoint === angle || Number.isNaN(anglePoint)) {
+                  return true; // the point is on a border or vertex
                 }
-                borders += 1;
-                console.log('2');
-              } else if (polygonPoints[nextpoint][1] >= y && polygonPoints[nextpoint][0] <= axisx) {
-                if (borders === 0 && x <= polygonPoints[point][0] && x > polygonPoints[nextpoint][0]) {
-                  lx = Math.abs(polygonPoints[point][0] - polygonPoints[nextpoint][0]);
-                  ly = Math.abs(polygonPoints[point][1] - polygonPoints[nextpoint][1]);
-                  angle = Math.atan(ly / lx) * (180 / Math.PI);
-                  console.log(`angleulo1: ${angle}`);
-                  lx = Math.abs(polygonPoints[point][0] - x);
-                  ly = Math.abs(polygonPoints[point][1] - y);
-                  anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
-                  console.log(`angleulo point1: ${anglePoint}`);
-                  if (anglePoint > angle) {
-                    borders -= 1;
-                  }
+                if (anglePoint > angle) {
+                  borders -= 1;
                 }
-                borders += 1;
-                console.log(`point2: ${point}`);
               }
+
+              borders += 1;
+            }
+            if (polygonPoints[nextPoint].lng <= y && polygonPoints[nextPoint].lat <= latAxis) {
+              // if the previous or next point of the point found is below the point on the Y axis
+              // and behind the X axis of the current point and in front of X
+              if (polygonPoints[point].lng === polygonPoints[nextPoint].lng) {
+                return true; // the point is in a vertical border
+              }
+              if (borders === 0 && x <= polygonPoints[point].lat && x >= polygonPoints[nextPoint].lat) {
+                lx = Math.abs(polygonPoints[point].lat - polygonPoints[nextPoint].lat);
+                ly = Math.abs(polygonPoints[point].lng - polygonPoints[nextPoint].lng);
+                angle = Math.atan(ly / lx) * (180 / Math.PI);
+                lx = Math.abs(polygonPoints[point].lat - x);
+                ly = Math.abs(polygonPoints[point].lng - y);
+                anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
+                if (anglePoint === angle || Number.isNaN(anglePoint)) {
+                  return true; // the point is on a border or vertex
+                }
+                if (anglePoint > angle) {
+                  borders -= 1;
+                }
+              }
+              if (polygonPoints[nextPoint].lat === latAxis) {
+                borders -= 1;
+              }
+              borders += 1;
+            }
+          } else if (polygonPoints[point].lng < y) {
+            // -----------------------------------BORDER DOWN------------------------------------------
+            // if the found point of the polygon is lower on the Y axis
+            if (polygonPoints[previousPoint].lng >= y && polygonPoints[previousPoint].lat <= latAxis) {
+              // if the previous or next point of the point found are above the point on the Y axis & back on the X axis
+              if (borders === 0 && x <= polygonPoints[point].lat && x >= polygonPoints[previousPoint].lat) {
+                lx = Math.abs(polygonPoints[point].lat - polygonPoints[previousPoint].lat);
+                ly = Math.abs(polygonPoints[point].lng - polygonPoints[previousPoint].lng);
+                angle = Math.atan(ly / lx) * (180 / Math.PI);
+                lx = Math.abs(polygonPoints[point].lat - x);
+                ly = Math.abs(polygonPoints[point].lng - y);
+                anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
+                if (anglePoint === angle || Number.isNaN(anglePoint)) {
+                  return true; // the point is on a border or vertex
+                }
+                if (anglePoint > angle) {
+                  borders -= 1;
+                }
+              }
+              borders += 1;
+            }
+            if (polygonPoints[nextPoint].lng >= y && polygonPoints[nextPoint].lat <= latAxis) {
+              if (borders === 0 && x <= polygonPoints[point].lat && x >= polygonPoints[nextPoint].lat) {
+                lx = Math.abs(polygonPoints[point].lat - polygonPoints[nextPoint].lat);
+                ly = Math.abs(polygonPoints[point].lng - polygonPoints[nextPoint].lng);
+                angle = Math.atan(ly / lx) * (180 / Math.PI);
+                lx = Math.abs(polygonPoints[point].lat - x);
+                ly = Math.abs(polygonPoints[point].lng - y);
+                anglePoint = Math.atan(ly / lx) * (180 / Math.PI);
+                if (anglePoint === angle || Number.isNaN(anglePoint)) {
+                  return true; // the point is on a border or vertex
+                }
+                if (anglePoint > angle) {
+                  borders -= 1;
+                }
+              }
+              if (polygonPoints[nextPoint].lat === latAxis) {
+                borders -= 1;
+              }
+              borders += 1;
             }
           }
         }
       }
     }
+  }
+  if (borders % 2 === 0) {
+    return false;
+  }
+  return true;
+};
 
-    console.log(`cross borders: ${borders}`);
-    if (borders % 2 === 0) {
-      console.log('The point is outside the polygon');
-    } else {
-      console.log('The point is inside the polygon');
-    }
-    rl.close();
-  });
-});
+
+export default isInsidePolygon;

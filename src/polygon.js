@@ -22,17 +22,23 @@ const isInsidePolygon = (polygonPoints, objP) => {
   let liminlng = 1000;
   let limaxlng = -1000;
 
-  for (let c = 0; c < polygonPoints.length; c += 1) {
-    if (polygonPoints[c].lng < liminlng) { // find the minimum limit in Y
-      liminlng = polygonPoints[c].lng;
-    } else if (polygonPoints[c].lng > limaxlng) { // find the maximum limit in Y
-      limaxlng = polygonPoints[c].lng;
+  liminlng = polygonPoints.reduce((previous, current) => { // find the minimum limit in longitude
+    if (current.lng < previous) {
+      return current.lng;
     }
-  }
+    return previous;
+  }, 1000);
+
+  limaxlng = polygonPoints.reduce((previous, current) => { // find the maximum limit in longitude
+    if (current.lng > previous) {
+      return current.lng;
+    }
+    return previous;
+  }, -1000);
 
   for (let c = 1; c < orderLat.length; c += 1) {
     if (orderLat[c].lat === orderLat[c - 1].lat) { // look for repeated numbers on X axis
-      orderLat.splice(c, 1);
+      orderLat.splice(c - 1, 1);
     }
   }
 
